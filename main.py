@@ -1,9 +1,9 @@
 # main.py
 from fastapi import FastAPI
-from app.routes import router as api_router
 from app.database import engine, Base
-from app.models import user
+from app.api import register_routes
 
 app = FastAPI()
 Base.metadata.create_all(bind=engine)
-app.include_router(api_router)
+
+register_routes(app)
