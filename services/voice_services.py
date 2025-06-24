@@ -14,24 +14,18 @@ VOSK_MODEL_PATH = "/Users/zawiyarkhan/dev/disertation/alzehimer backend/backend/
 
 os.makedirs(TEMP_DIR, exist_ok=True)
 
-# -------------------------------
-# 🔹 Save uploaded file
-# -------------------------------
+
 def save_uploaded_file(uploaded_file: UploadFile, path: str):
     with open(path, "wb") as buffer:
         shutil.copyfileobj(uploaded_file.file, buffer)
 
-# -------------------------------
-# 🔹 Convert to WAV
-# -------------------------------
+
 def convert_to_wav(input_path: str, output_path: str):
     audio = AudioSegment.from_file(input_path, format="m4a")
     audio = audio.set_channels(1).set_frame_rate(16000)
     audio.export(output_path, format="wav")
 
-# -------------------------------
-# 🔹 Extract prosodic features
-# -------------------------------
+
 def extract_voice_features(wav_path: str):
     y, sr = librosa.load(wav_path)
     pitches, magnitudes = librosa.piptrack(y=y, sr=sr)
@@ -62,9 +56,7 @@ def extract_voice_features(wav_path: str):
         "speech_ratio": speech_ratio
     }
 
-# -------------------------------
-# 🔹 Transcribe using VOSK
-# -------------------------------
+
 def transcribe_with_vosk(wav_path: str, model_path: str):
     if not os.path.exists(model_path):
         raise RuntimeError("VOSK model not found.")
@@ -85,9 +77,7 @@ def transcribe_with_vosk(wav_path: str, model_path: str):
     transcript_parts.append(final_result.get("text", ""))
     return " ".join(transcript_parts)
 
-# -------------------------------
-# 🔹 Analyze text linguistically
-# -------------------------------
+
 def analyze_transcript_nlp(text: str):
     try:
         _create_unverified_https_context = ssl._create_unverified_context
@@ -107,9 +97,6 @@ def analyze_transcript_nlp(text: str):
         "top_words": word_freq
     }
 
-# -------------------------------
-# 🔹 FastAPI Handler
-# -------------------------------
 def upload_voice(file: UploadFile = File(...)):
     # if not file.content_type.startswith("audio/"):
     #     return JSONResponse(content={"error": "File is not an audio type."}, status_code=400)
